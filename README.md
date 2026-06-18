@@ -10,6 +10,28 @@ A single-file, dark, melancholic 3D art gallery. Vanilla HTML, CSS, and JavaScri
 
 ---
 
+## Features
+
+| | Feature | Description |
+|---|---|---|
+| ✓ | **Three.js gallery core** | A fractured icosahedron (`IcosahedronGeometry(1.65, 1)`) drifts under `FogExp2(0x0a090d, 0.155)`, never fully clearing. A crimson wireframe at 16% opacity traces its broken faces. No bloom pass, no `EffectComposer` — the glow comes from material and light, not post-processing. |
+| ✓ | **Three-point cinematic lighting** | Ambient base (`#201c24`, 0.7) holds the room's dark. A crimson point light (`#c24048`, intensity 3.0) orbits the core and pulses via `sin(t·1.7)`. A cold-blue point light (`#3a5a82`) answers from behind, quieter. A near-invisible directional cream fill (0.18) keeps it just barely readable. |
+| ✓ | **Drifting ash particles** | A 1,500-point `BufferGeometry` rises at a constant 0.0026px/frame, wrapping from y=−8 back to y=8 — ash that never settles. Rotates independently of the core mesh. |
+| ✓ | **Cursor-driven camera parallax** | `pointermove` maps cursor position to a target camera offset, eased at 0.04/frame. The only "camera control" in the gallery — no orbit, no drag, you just look. |
+| ✓ | **Trailing cursor glow** | A 620px radial gradient (`rgba(178,59,59,0.13)`), `screen`-blended and blurred 14px, follows the pointer via direct ref transform writes — no re-render per frame. Suggests illumination rather than casting it. |
+| ✓ | **Scroll reveal system** | `IntersectionObserver` (threshold 0.12) fades and lifts each tagged element 28px on entry. Backed by a passive-scroll fallback sweep and a hard 1400ms timeout, so content is guaranteed visible even if the observer never fires. |
+| ✓ | **Hover-lift artwork frames** | Each of the nine collection tiles rises 8px on hover, border warming to `rgba(178,59,59,0.55)` under a dual shadow (`0 30px 70px -30px` outer, `inset 0 0 80px` glow). A `[ medium ]` watermark holds the center until the title takes the moment. |
+| ✓ | **Asymmetric masonry grid** | 12-column CSS grid, `grid-auto-flow: row dense`, each work spanning 3–5 columns at its own aspect ratio — the hall reads as hand-hung, not templated. |
+| ✓ | **Film grain overlay** | Animated SVG `feTurbulence` fractal noise at 5% opacity, `overlay` blend mode, looping an 11-stop keyframe with `steps(7)` timing every 5.5s. Keeps the dark from reading as flat digital black. |
+| ✓ | **Vignette & depth layering** | Fixed radial + linear gradient layers darken the frame edges and the seams between sections, reinforcing one continuous hall rather than stacked `<div>`s. |
+| ✓ | **Difference-blend navigation** | The fixed nav uses `mix-blend-mode: difference`, so its text stays legible whether it's sitting over near-black background or a lit frame. |
+| ✓ | **Self-contained bundle** | Three.js, the component runtime, fonts, markup, and styles all live inside one `index.html`. A small loader decodes a base64+gzip asset manifest into blob URLs at load (`DecompressionStream('gzip')`) and swaps in the real document. No server, no build step. |
+| ✓ | **Embedded variable webfonts** | Cormorant Garamond (300–600, italic + normal) and Space Mono (400/700) ship as inline `woff2`, split across latin / latin-ext / cyrillic / cyrillic-ext / vietnamese unicode ranges. The gallery never makes a font network request. |
+| ✓ | **Fluid responsive type** | Every headline sized with `clamp()` — the hero `h1` alone runs from 78px to 260px depending on viewport. Padding and gaps scale the same way, so the hall doesn't break on mobile. |
+| ✓ | **On-page error sink** | A `window.onerror` listener writes failures directly into a fixed panel on the page itself — diagnostic visibility for a single-file project with no console-attached build pipeline. |
+
+---
+
 ## The Premise
 
 > *I do not paint to be looked at. I paint the rooms where grief keeps its furniture — the cold side of the bed, the chair that faces the window. Beauty is only the wound, dressed well enough to be approached.*
